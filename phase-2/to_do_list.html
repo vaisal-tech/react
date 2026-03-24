@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <button class="add" id="add">Add Task</button>
+        </div>
+        
+        <div class="maintab">  
+            <div class="task_list" id="task_list">
+                <div>
+    
+                    <h6>task-1</h6>
+                    <select name="status" id="status">
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="incomplete">Incomplete</option>
+                    </select>
+                    <div>
+                        <button>delete</button>
+                        <button>edit</button>
+                    </div>
+                        
+                    
+                </div>
+               
+            </div>
+
+            <div class="creation" id="creation">
+                <div class="card">
+                    <label for="">Task name</label>
+                    <input type="text" placeholder="task name" id="name">  
+                    <button class="save_task" id="save">Save Task</button>
+                </div>
+                
+            </div>
+
+        </div>
+        
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
