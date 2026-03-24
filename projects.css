@@ -1,0 +1,34 @@
+body{
+    margin: 0;
+}
+
+.container{
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    
+}
+
+
+.project-set{
+
+    display: grid;
+    grid-template-columns: repeat(3 , 1fr);
+    
+   
+}
+.project-set div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid rgb(75, 163, 245);
+    width: 100%;
+    height: 150px;
+    transition: transform 0.5s ease, box-shadow 0.2s ease;
+}
+
+
+.project-set div:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
