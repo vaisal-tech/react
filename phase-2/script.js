@@ -1,84 +1,176 @@
-document.addEventListener('DOMContentLoaded',() =>{
+document.addEventListener('DOMContentLoaded', () => {
 
-    const addBtn=document.getElementById('add')
-    const createBox=document.getElementById('creation')
+    const addBtn = document.getElementById('add')
+    const createBox = document.getElementById('creation')
     const input = document.getElementById('name')
     const save = document.getElementById('save')
     const taskList = document.getElementById('task_list')
+    const filterSelect = document.getElementById('filter')
+    const taskCount = document.getElementById('task_count')
 
-    addBtn.addEventListener("click",()=>{
+    // ---------------- STORAGE ----------------
 
-        createBox.style.display="flex"
-    })
+    function getTasks() {
+        return JSON.parse(localStorage.getItem('tasks')) || []
+    }
 
-    save.addEventListener("click",()=>{
-        taskVal = input.value
-        console.log(taskVal)
-        if (taskVal === "") {
-            alert("Enter a task!");
-            return;
-        }
+    function saveTasks(tasks) {
+        localStorage.setItem('tasks', JSON.stringify(tasks))
+    }
 
-       // Create new task container
+    function updateStorage() {
+        const tasks = []
+
+        document.querySelectorAll('.task').forEach(task => {
+            const name = task.querySelector('h6').innerText
+            const status = task.querySelector('select').value
+            tasks.push({ name, status })
+        })
+
+        saveTasks(tasks)
+    }
+
+    // ---------------- CREATE TASK ----------------
+
+    function createTaskElement(taskObj) {
+
         const newTask = document.createElement('div')
-        newTask.classList.add('task-item')
+        newTask.classList.add('task')
 
-        // Task name
         const taskName = document.createElement('h6')
-        taskName.innerText = taskVal
+        taskName.innerText = taskObj.name
 
-        // Status dropdown
-        const statusDiv = document.createElement('div')
         const statusSelect = document.createElement('select')
-        statusSelect.name = "status"
-        const statuses = ["active", "completed", "incomplete"]
-        statuses.forEach(status => {
+
+        ;["active", "completed", "incomplete"].forEach(status => {
             const option = document.createElement('option')
             option.value = status
-            option.innerText = status.charAt(0).toUpperCase() + status.slice(1)
+            option.innerText = status
+            if (status === taskObj.status) option.selected = true
             statusSelect.appendChild(option)
         })
-        statusDiv.appendChild(statusSelect)
 
-        // Buttons container
         const btnDiv = document.createElement('div')
+        btnDiv.classList.add('btns')
 
-        // Delete button
         const deleteBtn = document.createElement('button')
         deleteBtn.innerText = "Delete"
-        deleteBtn.addEventListener('click', () => {
-            taskList.removeChild(newTask)
-        })
 
-        // Edit button
         const editBtn = document.createElement('button')
         editBtn.innerText = "Edit"
+
+        // DELETE
+        deleteBtn.addEventListener('click', () => {
+            newTask.remove()
+            updateStorage()
+            updateCount()
+        })
+
+        // EDIT
         editBtn.addEventListener('click', () => {
             const newVal = prompt("Edit your task:", taskName.innerText)
-            if (newVal !== null && newVal.trim() !== "") {
+            if (newVal && newVal.trim() !== "") {
                 taskName.innerText = newVal
+                updateStorage()
             }
+        })
+
+        // STATUS CHANGE
+        statusSelect.addEventListener('change', () => {
+            updateStorage()
+            applyFilter()
         })
 
         btnDiv.appendChild(deleteBtn)
         btnDiv.appendChild(editBtn)
 
-        // Append everything to the task container
         newTask.appendChild(taskName)
-        newTask.appendChild(statusDiv)
+        newTask.appendChild(statusSelect)
         newTask.appendChild(btnDiv)
 
-        // Append task to the list
+        return newTask
+    }
+
+    // ---------------- LOAD TASKS ----------------
+
+    function loadTasks() {
+        const tasks = getTasks()
+        taskList.innerHTML = ''
+
+        tasks.forEach(task => {
+            const taskEl = createTaskElement(task)
+            taskList.appendChild(taskEl)
+        })
+
+        updateCount()
+    }
+
+    // ---------------- ADD TASK ----------------
+
+    addBtn.addEventListener("click", () => {
+        createBox.style.display = "flex"
+    })
+
+    save.addEventListener("click", () => {
+
+        const taskVal = input.value.trim()
+
+        if (!taskVal) {
+            alert("Enter a task!")
+            return
+        }
+
+        const taskObj = {
+            name: taskVal,
+            status: "active"
+        }
+
+        const newTask = createTaskElement(taskObj)
         taskList.appendChild(newTask)
 
-        // Clear input and hide creation box
+        updateStorage()
+        updateCount()
+
         input.value = ''
-        
-
-
+        createBox.style.display = "none"
     })
-    
+
+    // ---------------- FILTER ----------------
+
+    filterSelect.addEventListener('change', applyFilter)
+
+    function applyFilter() {
+        const filter = filterSelect.value
+        const tasks = document.querySelectorAll('.task')
+
+        tasks.forEach(task => {
+            const status = task.querySelector('select').value
+
+            if (filter === 'all' || filter === status) {
+                task.style.display = 'flex'
+            } else {
+                task.style.display = 'none'
+            }
+        })
+
+        updateCount()
+    }
+
+    // ---------------- COUNT ----------------
+
+    function updateCount() {
+        const tasks = document.querySelectorAll('.task')
+        let visible = 0
+
+        tasks.forEach(task => {
+            if (task.style.display !== 'none') visible++
+        })
+
+        taskCount.innerText = `${visible} tasks`
+    }
+
+    // ---------------- INIT ----------------
+
+    loadTasks()
 
 })
-
-
