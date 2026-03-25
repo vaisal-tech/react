@@ -1,0 +1,23 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%; 
+  
+ 
+}
+
+.main{
+  padding: 20px;
+  background-color: rgba(239, 241, 245, 0.829);
+  min-height: 100%;
+}
