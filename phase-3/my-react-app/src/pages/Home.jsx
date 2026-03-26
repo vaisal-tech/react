@@ -3,15 +3,15 @@ import UserCard from "../components/UserCard";
 import "../styles/Home.css";
 import prfImage from "../assets/prf.jpg";
 
-const Home=()=>{
+const Home=({name,role})=>{
 
     return(
         <div>
             <div className="img-block">
                 <img src={prfImage} alt="" />
                 <div className="name-set">
-                    <h3>A.S.Vaisal</h3>
-                    <h4>Senior Software Engineer</h4>
+                    <h3>{name}</h3>
+                    <h4>{role}</h4>
                 </div>
                
             </div>
